@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>📝 Últimos Tópicos Adicionados</h5>
+                </div>
+                <div class="card-body">
+                    {% for topico in ultimos_adicionados %}
+                        <div class="mb-2">
+                            <a href="{% url 'detalhe_topico' topico.id %}">
+                                <strong>[{{ topico.cliente.nome }}]</strong> {{ topico.titulo }}
+                            </a>
+                            <br><small class="text-muted">por {{ topico.autor.username }} em {{ topico.created_at|date:"d/m/Y H:i" }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5>✏️ Últimos Tópicos Alterados</h5>
+                </div>
+                <div class="card-body">
+                    {% for topico in ultimos_alterados %}
+                        <div class="mb-2">
+                            <a href="{% url 'detalhe_topico' topico.id %}">
+                                <strong>[{{ topico.cliente.nome }}]</strong> {{ topico.titulo }}
+                            </a>
+                            <br><small class="text-muted">editado por {{ topico.ultimo_editor.username }} em {{ topico.updated_at|date:"d/m/Y H:i" }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5>Clientes</h5>
+                </div>
+                <div class="card-body">
+                    {% for cliente in clientes %}
+                        <a href="{% url 'cliente_topicos' cliente.id %}" class="btn btn-outline-primary m-1">
+                            {{ cliente.nome }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
