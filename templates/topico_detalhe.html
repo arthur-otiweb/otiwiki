@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ topico.titulo }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>{{ topico.titulo }}</h3>
+        <small>
+            Cliente: {{ topico.cliente.nome }} | 
+            Tipo: {{ topico.get_tipo_display }} |
+            Criado por: {{ topico.autor.username }} em {{ topico.created_at|date:"d/m/Y H:i" }}
+            {% if topico.ultimo_editor %} | Editado por: {{ topico.ultimo_editor.username }}{% endif %}
+        </small>
+    </div>
+    <div class="card-body">
+        <div class="mb-4">
+            {{ topico.conteudo|linebreaks }}
+        </div>
+        
+        {% if topico.midias.all %}
+            <hr>
+            <h5>📎 Mídias anexadas:</h5>
+            <div class="row">
+                {% for midia in topico.midias.all %}
+                    <div class="col-md-4 mb-3">
+                        {% if midia.tipo == 'img' %}
+                            <img src="{{ midia.arquivo.url }}" class="img-fluid" alt="{{ midia.descricao }}">
+                        {% else %}
+                            <video width="100%" controls>
+                                <source src="{{ midia.arquivo.url }}" type="video/mp4">
+                            </video>
+                        {% endif %}
+                        <small>{{ midia.descricao }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="card-footer">
+        <a href="/cliente/{{ topico.cliente.id }}/" class="btn btn-secondary">Voltar</a>
+        {% if user.is_staff %}
+            <a href="/topico/{{ topico.id }}/editar/" class="btn btn-warning">Editar</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

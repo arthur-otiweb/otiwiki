@@ -5,7 +5,7 @@ from django.utils import timezone
 class Cliente(models.Model):
     nome = models.CharField(max_length=200)
     cnpj = models.CharField(max_length=18, blank=True)
-    informacoes_gerais = models.TextField(blank=True, help_text="Servidores, metodologias, contatos, etc.")
+    informacoes_gerais = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -25,10 +25,10 @@ class Topico(models.Model):
     
     titulo = models.CharField(max_length=300)
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='info')
-    conteudo = models.TextField(help_text="Aceita HTML para formatação avançada")
+    conteudo = models.TextField()
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='topicos')
     autor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='topicos_criados')
-    ultimo_editor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='topicos_editados', null=True)
+    ultimo_editor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='topicos_editados', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -54,7 +54,7 @@ class MensagemChat(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
     
     class Meta:
-        ordering = ['timestamp']
+        ordering = ['-timestamp']
     
     def __str__(self):
         return f"{self.usuario.username}: {self.mensagem[:50]}"

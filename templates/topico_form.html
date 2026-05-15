@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}{% if topico %}Editar{% else %}Novo{% endif %} Tópico{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3>{% if topico %}Editar{% else %}Novo{% endif %} Tópico - {{ cliente.nome }}</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Título</label>
+                <input type="text" name="titulo" class="form-control" value="{{ topico.titulo|default:'' }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tipo</label>
+                <select name="tipo" class="form-select">
+                    <option value="info" {% if topico.tipo == 'info' %}selected{% endif %}>Informação Geral</option>
+                    <option value="tutorial" {% if topico.tipo == 'tutorial' %}selected{% endif %}>Tutorial</option>
+                    <option value="suporte" {% if topico.tipo == 'suporte' %}selected{% endif %}>Procedimento de Suporte</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Conteúdo</label>
+                <textarea name="conteudo" class="form-control" rows="10" required>{{ topico.conteudo|default:'' }}</textarea>
+            </div>
+            {% if not topico %}
+                <div class="mb-3">
+                    <label class="form-label">Mídias (imagens/vídeos)</label>
+                    <input type="file" name="midias" class="form-control" multiple>
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a href="{% if topico %}/topico/{{ topico.id }}/{% else %}/cliente/{{ cliente.id }}/{% endif %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

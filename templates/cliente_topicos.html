@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}{{ cliente.nome }}{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header bg-info text-white">
+        <h4>{{ cliente.nome }}</h4>
+        {% if cliente.informacoes_gerais %}
+            <small>{{ cliente.informacoes_gerais|truncatewords:30 }}</small>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if user.is_staff %}
+            <a href="/cliente/{{ cliente.id }}/criar/" class="btn btn-success mb-3">+ Novo Tópico</a>
+        {% endif %}
+        
+        <div class="list-group">
+            {% for topico in topicos %}
+                <a href="/topico/{{ topico.id }}/" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">
+                            {% if topico.tipo == 'tutorial' %}📘{% elif topico.tipo == 'suporte' %}🔧{% else %}ℹ️{% endif %}
+                            {{ topico.titulo }}
+                        </h5>
+                        <small>Atualizado em {{ topico.updated_at|date:"d/m/Y" }}</small>
+                    </div>
+                    <small class="text-muted">por {{ topico.autor.username }}</small>
+                </a>
+            {% empty %}
+                <p>Nenhum tópico ainda. {% if user.is_staff %}Clique em "Novo Tópico" para começar.{% endif %}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

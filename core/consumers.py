@@ -2,6 +2,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
+from django.utils import timezone
 from .models import MensagemChat
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -46,5 +47,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def enviar_historico(self):
-        ultimas = MensagemChat.objects.all().order_by('-timestamp')[:50]
-        return list(ultimas)
+        return list(MensagemChat.objects.all().order_by('-timestamp')[:50].values())
